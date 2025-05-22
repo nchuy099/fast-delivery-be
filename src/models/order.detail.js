@@ -19,15 +19,25 @@ const OrderDetail = sequelize.define('OrderDetail', {
         allowNull: false,
         field: 'weight_kg'
     },
-    size: {
-        type: DataTypes.ENUM('SMALL', 'MEDIUM', 'LARGE', 'X-LARGE'),
+    lengthCm: {
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
-        field: 'size'
+        field: 'length_cm'
     },
-    deliveryInsurance: {
-        type: DataTypes.ENUM('NO_INSURANCE', 'STANDARD', 'SILVER', 'GOLD'),
+    widthCm: {
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
-        field: 'delivery_insurance'
+        field: 'width_cm'
+    },
+    heightCm: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        field: 'height_cm'
+    },
+    sizeName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'size_name'
     }
 }, {
     tableName: 'order_detail',

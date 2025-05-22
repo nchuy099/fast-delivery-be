@@ -2,12 +2,13 @@ const User = require('./user.model');
 const Driver = require('./driver.model');
 const Order = require('./order.model');
 const OrderDetail = require('./order.detail');
-const OrderAddon = require('./order.addon');
+const OrderSpecialDemand = require('./order.specialDemand');
 const OrderLocation = require('./order.location');
 const Message = require('./message.model');
 const DeviceToken = require('./deviceToken.model');
 const Notification = require('./notification.model');
 const Review = require('./review.model');
+const OrderSenderReceiver = require('./order.senderReceiver');
 // User associations
 User.hasOne(Driver, {
     foreignKey: 'userId',
@@ -92,14 +93,14 @@ Order.hasOne(OrderDetail, {
 });
 
 // OrderAddon associations
-OrderAddon.belongsTo(Order, {
+OrderSpecialDemand.belongsTo(Order, {
     foreignKey: 'orderId',
     as: 'order'
 });
 
-Order.hasOne(OrderAddon, {
+Order.hasOne(OrderSpecialDemand, {
     foreignKey: 'orderId',
-    as: 'addon'
+    as: 'specialDemand'
 });
 
 
@@ -112,6 +113,17 @@ OrderLocation.belongsTo(Order, {
 Order.hasOne(OrderLocation, {
     foreignKey: 'orderId',
     as: 'location'
+});
+
+// OrderSenderReceiver associations
+OrderSenderReceiver.belongsTo(Order, {
+    foreignKey: 'orderId',
+    as: 'order'
+});
+
+Order.hasOne(OrderSenderReceiver, {
+    foreignKey: 'orderId',
+    as: 'senderReceiver'
 });
 
 // Message associations
@@ -130,12 +142,12 @@ Message.belongsTo(Order, {
     as: 'order'
 });
 
-Review.hasOne(Order, {
+Review.belongsTo(Order, {
     foreignKey: 'orderId',
     as: 'order'
 });
 
-Order.belongsTo(Review, {
+Order.hasOne(Review, {
     foreignKey: 'orderId',
     as: 'review'
 });
@@ -147,8 +159,9 @@ module.exports = {
     Driver,
     Order,
     OrderDetail,
-    OrderAddon,
+    OrderSpecialDemand,
     OrderLocation,
+    OrderSenderReceiver,
     Message,
     DeviceToken,
     Notification,

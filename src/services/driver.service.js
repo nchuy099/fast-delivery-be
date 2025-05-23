@@ -45,9 +45,9 @@ const getOrderDetail = async (orderData, driverPos) => {
         { lat: driverPos.lat, lng: driverPos.lng });
     const driverPickupDistance = driverPickupSummary.length;
 
-    const polyline = await getPolyline(orderMain.vehicleType,
-        { lat: orderLocation.pickupLat, lng: orderLocation.pickupLng },
-        { lat: orderLocation.dropoffLat, lng: orderLocation.dropoffLng });
+    const driverPickupPolyline = await getPolyline(orderMain.vehicleType,
+        { lat: driverPos.lat, lng: driverPos.lng },
+        { lat: orderLocation.pickupLat, lng: orderLocation.pickupLng })
 
     return {
         orderMain,
@@ -57,7 +57,7 @@ const getOrderDetail = async (orderData, driverPos) => {
         orderSpecialDemand,
         pickupDropoffDistance,
         driverPickupDistance,
-        polyline,
+        driverPickupPolyline,
     }
 }
 

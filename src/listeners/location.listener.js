@@ -17,6 +17,7 @@ module.exports = (io, socket) => {
                 message: 'Location updated successfully',
                 data: data
             });
+            console.log(`Driver ${socket.userId} location updated: ${data.lng}, ${data.lat}`);
         } catch (error) {
             io.driverNamespace.to(socket.id).emit('location:update', {
                 success: false,

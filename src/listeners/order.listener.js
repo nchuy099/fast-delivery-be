@@ -2,7 +2,7 @@ const redisClient = require('../config/redis');
 const { sequelize } = require("../config/database");
 
 const { matchDriver } = require('../services/driver.service');
-const { Order, OrderLocation, OrderDetail, OrderSenderReceiver, OrderSpecialDemand, Driver } = require('../models/index');
+const { Order, OrderLocation, OrderDetail, OrderSenderReceiver, OrderSpecialDemand, Driver, User } = require('../models/index');
 const { where } = require('sequelize');
 const { getSocket } = require('../services/websocket/driver');
 const logger = require('../config/logger');
@@ -28,23 +28,34 @@ module.exports = (io, socket) => {
 
             await t.commit(); // Commit transaction nếu không có lỗi
             const driver = await Driver.findByPk(driverId);
-            const driverName = driver.user.fullName;
+            const user = await User.findByPk(driverId);
 
-            const payload = {
+            const payloadCus = {
                 success: true,
                 message: 'Order created successfully',
                 data: {
                     orderId,
-                    driverName,
-                    driverLisenceNumber: driver.licenseNumber,
-                    driverVehicleType: driver.vehicleType,
-                    driverVehiclePlate: driver.vehiclePlate,
+                    driverInfo: {
+                        id: driverId,
+                        fullName: user.fullName,
+                        phoneNumber: user.phoneNumber,
+                        vehiclePlate: driver.vehiclePlate,
+                    }
                 }
             }
 
-            socket.emit('order:create', payload)
+            const payloadDriver = {
+                success: true,
+                message: 'Order created successfully',
+                data: {
+                    orderId,
+                }
+            }
+
+
+            socket.emit('order:create', payloadCus)
             const driverSocket = getSocket(driverId);
-            driverSocket.emit('order:create', payload)
+            driverSocket.emit('order:create', payloadDriver)
         } catch (error) {
             console.error(error);
             await t.rollback(); // rollback nếu có lỗi
